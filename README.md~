@@ -1,0 +1,79 @@
+# ml-organ-tox
+
+# Installation
+
+## Requirements
+
+### Operating system 
+This system has only been tested under [Red Hat Enterprise Linux v6](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux) and [Ubuntu Server 16.04 LTS](http://www.ubuntu.com). The Ubuntu system can be downloaded freely and installed on any Intel PC. 
+
+### MongoDB
+
+Install the latest version of [mongodb](http://www.mongodb.com). MongoDB is a document-oriented database that is quite handy for storing complex data structures [here's](https://docs.mongodb.com/getting-started/shell/introduction/) an introduction to MongoDB. Read the [tutorial on mongodb security](https://docs.mongodb.com/manual/tutorial) and confirm that authentication switched on (edit the /etc/mongod.conf add "authorization:enabled" under security, then restart mongodb).
+ 
+### Python
+
+This code has been tested on [Python 2.7](http://python.org). The easiest way to install Python 2.7 is via [Anaconda](https://www.continuum.io/downloads). Install the python packages given in py_requirements.txt as follows:
+
+```
+unix> pip install -r py_requirements.txt
+```
+
+### Jupyter
+[Jupyter notebook](http://jupyter.org/) is an interactive computing environment based and is freely available. It can be installed using Anaconda. Please the the documents about Jupyter or find a tutorial on YouTube.  After jupyter is installed read the [quickstart instructions](https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/) to create a configuration file. Set the following variables in your jupyter_notebook_config.py:
+
+```python
+c.NotebookApp.notebook_dir = your_notebook_directory
+c.NotebookApp.port = 7777
+```
+
+Start the notebook server from the command line using (I always run this in a [screen](https://www.gnu.org/software/screen/manual/screen.html)):
+
+```
+unix> jupyter notebook
+```
+
+### Python source: Place the python source files in your PYTHONPATH. 
+
+# Loading MongoDB data
+MongoDB data have been provided under the data/mongodump directory and must be restored using the (mongorestore)[https://docs.mongodb.com/manual/reference/program/mongorestore/] tool (installed as part of the mongodb package). 
+
+## Create the mongo database 
+
+Login to mongodb as the administrative user and create a database by the name "organtox_v1". [Create the user](https://docs.mongodb.com/manual/reference/method/db.createUser/) devel (password: devel) that will be used by the code to access the organtox_v1 database. 
+
+## Download the mongodb files
+The data required for this analysis has been loaded into a mongodb database that must be downloaded from (ftp://newftp.epa.gov/comptox/staff/ishah/mongodb_organtox_v1.tbz)[ftp://newftp.epa.gov/comptox/staff/ishah/mongodb_organtox_v1.tbz]. This is a large file and may take a long time to download. Untar this file using the following commmand (will need bunzip2 decompression):-
+
+```
+unix> tar jxvf mongodb_organtox_v1.tbz
+```
+
+This will create the directory: organtox_v1 with the following contents:
+```
+organtox_v1/tox_fp.bson
+organtox_v1/bio_fp.bson
+organtox_v1/tox_fp.metadata.json
+organtox_v1/ml_run_v1.bson
+organtox_v1/ml_run_v1.metadata.json
+organtox_v1/bio_fp.metadata.json
+organtox_v1/ml_summary_v1.metadata.json
+organtox_v1/ml_summary_v1.bson
+organtox_v1/ml_lr_v1.metadata.json
+organtox_v1/chm_fp.metadata.json
+organtox_v1/chm_fp.bson
+organtox_v1/ml_lr_v1.bson
+```
+
+## Restore the organtox_v1 database from the downloaded files
+
+
+The following unix command (see documentation on [mongorestore](https://docs.mongodb.com/manual/reference/program/mongorestore/))loads the contents of the data/mongodump directory into the htsdb database (by user=devel with password = devel):-
+
+```
+unix> mongorestore -u devel -p devel -d organtox_v1 organtox_v1
+```
+
+# Testing the system
+After you have completed the above requirements save the hts-db-testing.ipynb notebook to your_notebook_directory and open [this page](http://localhost:7777) in your browser. Each section of code (called a cell) can be executed by pressing the ">|" button on the menu or by the ctrl-enter key combination to produce the output. All cells must be run sequentially in order to ensure the variables have been initialized. If you can generate the concentration response heatmaps then the above process was successful .... 
+
