@@ -18,10 +18,14 @@ Unless already available, install the latest version of [mongodb](http://www.mon
 
 ### Create the mongo database 
 
-Login to mongodb as the administrative user and create a database by the name "organtox_v1". [Create the user](https://docs.mongodb.com/manual/reference/method/db.createUser/) devel (password: devel) that will be used by the code to access the organtox_v1 database. 
+Login to mongodb as the administrative user and create a database by the name "organtox_v1". [Create an account](https://docs.mongodb.com/manual/reference/method/db.createUser/) that will be used by the code to access the organtox_v1 database. Currently, the username/password are set to devel/devel but these can be changed (make sure the code database connection code is changed in the jupyter notebooks - see below).
+
+```
+python> DB = openMongo(host='pb.epa.gov',user='devel',passwd='devel',db='organtox_v1')
+```
 
 ### Download the mongodb files
-The data required for this analysis is available as a mongodump file and it must be downloaded via [ftp](ftp://newftp.epa.gov/comptox/staff/ishah/mongodb_organtox_v1.tbz). Please note his is a large file and may take a long time to download. Untar this file using the following commmand (will need bunzip2 decompression):-
+The data required for this analysis is available as a mongodump file and it must be downloaded via [ftp](https://tinyurl.com/z4nfto6). Please note: this is a large file and it will take a long time to download. Untar this file using the following commmand (will need bunzip2 decompression):-
 
 ```
 unix> tar jxvf mongodb_organtox_v1.tbz
@@ -53,6 +57,9 @@ unix> mongorestore -u devel -p devel -d organtox_v1 organtox_v1
 ```
 
 Test out the mongodb installation by connecting to the db using the mongo command line client.
+```
+unix> mongo -u devel -p devel localhost/organtox_v1
+```
 
 ## Python
 
@@ -77,6 +84,6 @@ unix> jupyter notebook
 
 # Testing the system
 
-After you have completed the above steps open [this page (if jupyter is running on port 7777)](http://localhost:7777) in your browser to run different steps of the analysis. The machine learning analysis given in "organ-tox-ml.ipynb", the impact of different factors on F1 performance is given in "organ-tox-stats.ipynb", and the code for reproducing all figures / tables is given in "organ-tox-figs.ipynb".
+After you have completed the above steps open [this page (if jupyter is running on port 7777)](http://localhost:7777) in your browser to run different steps of the analysis. The machine learning analysis given in notebooks/organ-tox-ml.ipynb, the analysis of different factors in machine learning on F1 performance is given in notebooks/organ-tox-stats.ipynb, and the code for reproducing all figures / tables is given in notebooks/organ-tox-figs.ipynb.
 
 
